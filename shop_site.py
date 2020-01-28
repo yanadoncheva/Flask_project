@@ -22,7 +22,7 @@ def create_post():
     post_data = request.get_json(force=True, silent=True)
     if post_data == None:
         return "Bad request", 400
-    post = Post(post_data["title"], post_data["content"])
+    post = Post(post_data["title"], post_data["content"], post_data["price"], post_data["post_date"], post_data["available"], post_data["buyer"])
     post.save()
     return json.dumps(post.to_dict()), 201
 
@@ -57,6 +57,17 @@ def update_post(post_id):
         post.title = post_data["title"]
     if "content" in post_data:
         post.content = post_data["content"]
+    if "price" in post_data:
+        post.price = post_data["price"]
+    if "post_date" in post_data:
+        post.post_date = post_data["post_date"]
+    if "available" in post_data:
+        post.available = post_data["available"]
+    if "buyer" in post_data:
+        post.buyer = post_data["buyer"]
+
+
+
     return json.dumps(post.save().to_dict())
 
 
