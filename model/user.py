@@ -1,17 +1,26 @@
+import hashlib
 
 from database import SQLite
 from errors import ApplicationError
 
 
-class User(object):
+class User:
 
-    def __init__(self, username, password, user_id=None, email, adress, phone ):
+    def __init__(self, user_id, username, password, email, adress, phone ):
         self.id = user_id
         self.username = username
         self.password = password
         self.email = email
         self.adress = adress
         self.phone = phone
+
+    def create(self):
+        with SQLite() as db:
+            values = (self.username, self.password, self.email, self.adress, self.phone)
+            db.execute('''
+                INSERT INTO users (username, password, email, adress, phone)
+                VALUES (?, ?, ?, ?, ?)''', values)
+            return self
 
     def to_dict(self):
         user_data = self.__dict__
@@ -23,6 +32,10 @@ class User(object):
             cursor = db.execute(self.__get_save_query())
             self.id = cursor.lastrowid
         return self
+
+    @staticmethod
+    def hash_password(password):
+        return hashlib.sha256(password.encode('utf-8')).hexdigest()
 
     @staticmethod
     def delete(user_id):
@@ -58,6 +71,10 @@ class User(object):
             raise ApplicationError(
                     "Post with name {} not found".format(username), 404)
         return User(*user)
+
+#	def generate_token(self):
+#		s = Serializer(SECRET_KEY, expires_in=600)
+#		return s.dumps({'username': self.username})
 
     @staticmethod
     def all():

@@ -1,4 +1,4 @@
-mport sqlite3 as sqlite
+import sqlite3 as sqlite
 
 
 DB_NAME = "example.db"
@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS post
 conn.commit()
 
 conn.cursor().execute('''
-CREATE TABLE IF NOT EXISTS user
+CREATE TABLE IF NOT EXISTS users
     (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         username TEXT NOT NULL UNIQUE,
